@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+
+# upstream reference clone (third-party, large, kept out of this repo)
+upstream-wonderunit/
+
+# WorkBuddy internal state
+.workbuddy/
+
+# build outputs (CI regenerates)
+dist/
+web/dist/
+*.zip
+
+# iOS native build artifacts
+ios/App/Pods/
+ios/App/App.xcworkspace/
+ios/App/App.xcuserdata/
+**/build/
+DerivedData/
+
+# regenerable verification artifacts
+web/screenshots/
+.chrome-profile*/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp

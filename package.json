@@ -1,0 +1,17 @@
+{
+  "name": "storyboarder-ipad",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Storyboarder for iPad — Capacitor iOS shell wrapping the Web Runtime.",
+  "type": "module",
+  "scripts": {
+    "cap:sync": "cap sync ios",
+    "cap:open": "cap open ios",
+    "patch:plist": "node scripts/patch-infoplist.js"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/ios": "^6.0.0"
+  }
+}

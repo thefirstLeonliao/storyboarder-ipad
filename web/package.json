@@ -1,0 +1,14 @@
+{
+  "name": "storyboarder-ipad-web",
+  "productName": "Storyboarder (Web Runtime)",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Storyboarder Web/iPadOS runtime - browser runtime for Wonder Unit Storyboarder, no Electron required.",
+  "type": "module",
+  "scripts": {
+    "web": "node server.js",
+    "build:web": "node scripts/build.js",
+    "package-zip": "node scripts/package-zip.js",
+    "verify": "node scripts/verify-cdp.js"
+  }
+}

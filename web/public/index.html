@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>Storyboarder — Web Runtime</title>
+  <link rel="icon" href="/img/logoicon.png" />
+  <link rel="stylesheet" href="/css/app.css" />
+</head>
+<body>
+  <!-- ===== Toolbar (mirrors Storyboarder top toolbar) ===== -->
+  <header id="toolbar">
+    <div class="tb-group tb-tools">
+      <button class="tool" data-tool="light-pencil" title="Light Pencil (1)"><span class="ico">✎</span><span class="lbl">Light</span></button>
+      <button class="tool" data-tool="pencil" title="Pencil (2)"><span class="ico">✏️</span><span class="lbl">Pencil</span></button>
+      <button class="tool" data-tool="pen" title="Pen (3)"><span class="ico">🖊️</span><span class="lbl">Pen</span></button>
+      <button class="tool" data-tool="brush" title="Brush (4)"><span class="ico">🖌️</span><span class="lbl">Brush</span></button>
+      <button class="tool" data-tool="eraser" title="Eraser (5)"><span class="ico">🩹</span><span class="lbl">Eraser</span></button>
+    </div>
+
+    <div class="tb-group tb-colors" id="color-swatches" title="Color"></div>
+
+    <div class="tb-group tb-size">
+      <label for="brush-size">Size</label>
+      <input type="range" id="brush-size" min="1" max="60" value="4" />
+      <span id="brush-size-label">4</span>
+    </div>
+
+    <div class="tb-group tb-edit">
+      <button id="undo" title="Undo (Ctrl+Z)">↶ Undo</button>
+      <button id="redo" title="Redo (Ctrl+Shift+Z)">↷ Redo</button>
+      <button id="clear" title="Clear board">Clear</button>
+      <button id="onion" class="toggle" title="Onion skin (previous board ghost)">Onion</button>
+      <button id="reference" title="Load reference image">Ref</button>
+    </div>
+
+    <div class="tb-group tb-board">
+      <button id="new-board" title="New board">+ Board</button>
+      <button id="dup-board" title="Duplicate board">Dup</button>
+      <button id="del-board" title="Delete board (Del)">Del</button>
+    </div>
+
+    <div class="tb-group tb-file">
+      <button id="import" title="Import .storyboarder">Import</button>
+      <button id="save" title="Export .storyboarder (Ctrl+S)">Export</button>
+      <button id="export-pdf" title="Export PDF (all boards)">PDF</button>
+      <button id="export-png" title="Export current board PNG">PNG</button>
+      <button id="export-images" title="Export all boards as PNG zip">Images</button>
+      <button id="ipad-preview" class="toggle" title="Toggle iPad layout preview">iPad</button>
+    </div>
+
+    <div class="tb-group tb-title" id="project-title">Untitled</div>
+  </header>
+
+  <!-- ===== Stage: board info + canvas ===== -->
+  <main id="stage">
+    <aside id="board-info">
+      <h3>Board</h3>
+      <label class="field">
+        <span>Shot</span>
+        <select id="meta-shot">
+          <option value="none">No shot</option>
+          <option value="shot">Shot</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Duration (s)</span>
+        <input type="number" id="meta-duration" min="0.1" step="0.1" value="2" />
+      </label>
+      <label class="field">
+        <span>New shot</span>
+        <input type="checkbox" id="meta-newshot" />
+      </label>
+      <label class="field">
+        <span>Dialogue</span>
+        <textarea id="meta-dialogue" rows="3" placeholder="Dialogue…"></textarea>
+      </label>
+      <label class="field">
+        <span>Action</span>
+        <textarea id="meta-action" rows="3" placeholder="Action…"></textarea>
+      </label>
+      <label class="field">
+        <span>Notes</span>
+        <textarea id="meta-notes" rows="3" placeholder="Notes…"></textarea>
+      </label>
+    </aside>
+
+    <section id="sketch-wrap">
+      <div id="sketch-stage">
+        <canvas id="sketch"></canvas>
+        <div id="sketch-hint">Draw here with mouse / pen / touch</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Playback transport ===== -->
+  <footer id="playback">
+    <button id="play-prev" title="Previous board (←)">⏮</button>
+    <button id="play-toggle" title="Play / Pause (Space)">▶ Play</button>
+    <button id="play-next" title="Next board (→)">⏭</button>
+    <span id="playback-info"></span>
+  </footer>
+
+  <!-- ===== Timeline (thumbnail drawer) ===== -->
+  <div id="thumbnail-drawer">
+    <div id="thumbnails"></div>
+  </div>
+
+  <div id="status" class="status-bar"></div>
+
+  <!-- hidden file inputs -->
+  <input type="file" id="import-file" accept=".storyboarder,application/json,.zip" hidden />
+  <input type="file" id="reference-file" accept="image/*" hidden />
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
