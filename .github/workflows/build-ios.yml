@@ -1,0 +1,86 @@
+# Storyboarder for iPad — 云端 macOS 构建【未签名 IPA】
+#
+# 作用：在 GitHub 的 macOS 运行器上把「网页版运行时 + Capacitor 原生壳」编译成 .ipa。
+# 本工作流【不做任何签名】，产出的 IPA 需你用自己的【免费 Apple ID】通过侧载工具
+# （Sideloadly / AltStore / Feather / Esign）签名后安装——即「不受信任的应用」。
+#
+# 全程：不需要 Mac、不需要 $99 开发者账号、不需要应用商店、不需要任何 GitHub Secret。
+#
+# 触发：仓库 Actions 页 → 手动 "Run workflow"（或 push 到 main）。
+# 产物：Artifacts 里的 Storyboarder.ipa（未签名）。
+#
+# 安装步骤（在你自己电脑/iPad 上）：
+#   1) 下载 Storyboarder.ipa
+#   2) 用侧载工具（如 Sideloadly，电脑端；或 AltStore/Feather，iPad 端）载入该 IPA
+#   3) 侧载工具用你的免费 Apple ID 签名 → 安装到 iPad
+#   4) iPad：设置 → 通用 → VPN与设备管理 → 信任该开发者
+#   5) 免费签名有效期 7 天，到期用侧载工具重签即可
+#
+# 若要「永久/多人分发」，再另走 $99 账号的 Ad-Hoc / TestFlight（见 docs/ipad-build.md）。
+
+name: Build iOS IPA (unsigned)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 1) 构建网页产物（Capacitor 会把它装进 WKWebView）
+      - name: Build web runtime
+        working-directory: web
+        run: |
+          npm ci || npm install
+          npm run build:web
+
+      # 2) 装 Capacitor CLI + iOS 平台
+      - name: Install Capacitor
+        run: npm install -D @capacitor/cli@latest @capacitor/core@latest @capacitor/ios@latest
+
+      # 3) 生成 iOS 工程：先备份自定义 Swift 插件，干净 cap add ios 后再拷回，
+      #    注入 .storyboarder 文件类型，最后 cap sync。
+      - name: Prepare iOS native project
+        run: |
+          mkdir -p /tmp/sb-plugin
+          cp ios/App/App/StoryboarderNativePlugin.swift /tmp/sb-plugin/ 2>/dev/null || true
+          cp ios/App/App/AppDelegate+Storyboarder.swift /tmp/sb-plugin/ 2>/dev/null || true
+          rm -rf ios/App
+          npx cap add ios
+          mkdir -p ios/App/App
+          cp /tmp/sb-plugin/StoryboarderNativePlugin.swift ios/App/App/ 2>/dev/null || true
+          cp /tmp/sb-plugin/AppDelegate+Storyboarder.swift ios/App/App/ 2>/dev/null || true
+          node scripts/patch-infoplist.js
+          npx cap sync ios
+
+      # 4) 编译 Archive，但【禁止签名】(CODE_SIGNING_ALLOWED=NO)
+      - name: Archive (unsigned)
+        run: |
+          xcodebuild -workspace ios/App/App.xcworkspace -scheme App -configuration Release \
+            archive -archivePath "$PWD/build/App.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGN_STYLE=manual \
+            DEVELOPMENT_TEAM= CODE_SIGN_IDENTITY=""
+
+      # 5) 把未签名的 .app 打成未签名 .ipa（Payload 结构）
+      - name: Package unsigned IPA
+        run: |
+          rm -rf build/Payload
+          mkdir -p build/Payload
+          cp -r "build/App.xcarchive/Products/Applications/App.app" build/Payload/
+          cd build && zip -r Storyboarder.ipa Payload && cd ..
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Storyboarder-iPad-IPA
+          path: build/Storyboarder.ipa
