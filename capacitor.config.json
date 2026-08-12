@@ -1,0 +1,15 @@
+{
+  "appId": "com.wonderunit.storyboarder",
+  "appName": "Storyboarder",
+  "webDir": "web/dist",
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": ["*"]
+  },
+  "ios": {
+    "contentInset": "always"
+  },
+  "plugins": {
+    "StoryboarderNativePlugin": {}
+  }
+}
