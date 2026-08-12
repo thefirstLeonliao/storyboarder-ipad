@@ -57,7 +57,7 @@ jobs:
           mkdir -p /tmp/sb-plugin
           cp ios/App/App/StoryboarderNativePlugin.swift /tmp/sb-plugin/ 2>/dev/null || true
           cp ios/App/App/AppDelegate+Storyboarder.swift /tmp/sb-plugin/ 2>/dev/null || true
-          rm -rf ios/App
+          rm -rf ios
           npx cap add ios
           mkdir -p ios/App/App
           cp /tmp/sb-plugin/StoryboarderNativePlugin.swift ios/App/App/ 2>/dev/null || true
