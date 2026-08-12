@@ -46,7 +46,9 @@ jobs:
 
       # 2) 装 Capacitor CLI + iOS 平台
       - name: Install Capacitor
-        run: npm install -D @capacitor/cli@latest @capacitor/core@latest @capacitor/ios@latest
+        run: |
+          npm install -D @capacitor/cli@latest @capacitor/core@latest @capacitor/ios@latest
+          npm install -D typescript
 
       # 3) 生成 iOS 工程：先备份自定义 Swift 插件，干净 cap add ios 后再拷回，
       #    注入 .storyboarder 文件类型，最后 cap sync。
