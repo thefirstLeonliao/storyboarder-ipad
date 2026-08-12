@@ -1,4 +1,4 @@
-import { CapacitorConfig } from '@capacitor/cli'
+import type { CapacitorConfig } from '@capacitor/cli'
 
 // Storyboarder for iPad — Capacitor configuration (spec §6, §31).
 // webDir points at the webpack/web build output consumed by the iOS WKWebView shell.
