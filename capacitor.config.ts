@@ -6,7 +6,7 @@ import type { CapacitorConfig } from '@capacitor/cli'
 const config: CapacitorConfig = {
   appId: 'com.wonderunit.storyboarder',
   appName: 'Storyboarder',
-  webDir: 'dist',
+  webDir: 'web/dist',
 
   server: {
     // Keep the WKWebView on https so camera/mic/clipboard APIs are allowed.
